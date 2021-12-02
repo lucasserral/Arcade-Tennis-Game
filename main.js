@@ -117,7 +117,7 @@ function __winningEvent(){
     context.fillText(playerPoints,100,100);
     context.fillText(oponentPoints,canvas.width - 100 ,100);
     if (playerPoints > oponentPoints){
-        context.fillText("You win!",canvas.width/2 - 50 ,canvas.height);
+        context.fillText("You win!",canvas.width/2 - 50 ,canvas.height/2);
     }
     else{
         context.fillText("You were defeated!",canvas.width/2 - 50 ,canvas.height/2);

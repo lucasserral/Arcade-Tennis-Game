@@ -8,15 +8,17 @@ var ballSpeedX = 2;
 var ballSpeedY = 2;
 var playersWidth = 15;
 var playersHeight = 70;
-var oponentPosition = (canvas.height/2)-(playersHeight/2);
-var playerPosition = oponentPosition;
+var oponentPositionY = (canvas.height/2)-(playersHeight/2);
+var playerPositionY = oponentPositionY;
+var playerPositionX = 5;
 var ballGoingRight = true;
 var ballGoingDown = true;
+var oponentPositionX = canvas.width-(playersWidth + 5);
 
 window.onload = function () {
     addEventListener('mousemove',function (evt) {
         mousePos = __getMousePos(evt);
-        playerPosition = mousePos.y - (playersHeight/2);
+        playerPositionY = mousePos.y - (playersHeight/2);
     });
     var fps = 60;
     setInterval(function () {
@@ -54,20 +56,27 @@ function __moveBall() {
         ballY -= ballSpeedY;
     }
 
-    // Colision con paredes del canva.
-    if ( ballX + ballSize >= canvas.width || ballX <= 0 ) {
+    // Colision con jugadores.
+    if ( (ballX + ballSize >= oponentPositionX && ballX < oponentPositionX + playersWidth && ballY >= oponentPositionY && ballY <= oponentPositionY + playersHeight ) || ( ballX <= playerPositionX + playersWidth && ballX >= playerPositionX && ballY >= playerPositionY && ballY <= playerPositionY + playersHeight )) {
         ballGoingRight = !ballGoingRight;
     }
+    // Colision con las paredes del canva.
     if ( ballY + ballSize >= canvas.height || ballY <= 0 ) {
         ballGoingDown = !ballGoingDown;
     }
+    if ( ballX < 0 || ballX > canvas.width ) {
+        ballX = (canvas.width/2)-ballSize/2;
+        ballY = (canvas.height/2)-ballSize/2;
+    }
+
+
 }
 
 function __moveOponent(){
-    if (ballY >= oponentPosition + 15 && ballGoingDown) {
-        oponentPosition += 3;
-    } else if (ballY <= oponentPosition + playersHeight -15 && !ballGoingDown) {
-        oponentPosition -= 3;
+    if (ballY >= oponentPositionY + 15 && ballGoingDown) {
+        oponentPositionY += 3;
+    } else if (ballY <= oponentPositionY + playersHeight -15 && !ballGoingDown) {
+        oponentPositionY -= 3;
     }
 }
 
@@ -84,11 +93,11 @@ function __draw(){
 
     // Dibuja oponente.
     context.fillStyle = 'black';
-    context.fillRect(canvas.width-(playersWidth + 5),oponentPosition,playersWidth,playersHeight);
+    context.fillRect(oponentPositionX,oponentPositionY,playersWidth,playersHeight);
 
     // Dibuja jugador.
     context.fillStyle = 'black';
-    context.fillRect(5,playerPosition,playersWidth,playersHeight);
+    context.fillRect(playerPositionX,playerPositionY,playersWidth,playersHeight);
 
 }
 

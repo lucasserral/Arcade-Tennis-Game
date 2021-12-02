@@ -4,23 +4,39 @@ console.log("javascript");
 var ballSize = 5;
 var ballX = (canvas.width/2)-ballSize/2;
 var ballY = (canvas.height/2)-ballSize/2;
-var ballSpeedX = 5;
-var ballSpeedY = 5;
+var ballSpeedX = 2;
+var ballSpeedY = 2;
 var playersWidth = 15;
-var playersHeight = 50;
+var playersHeight = 70;
 var oponentPosition = (canvas.height/2)-(playersHeight/2);
 var playerPosition = oponentPosition;
 var ballGoingRight = true;
 var ballGoingDown = true;
 
 window.onload = function () {
-
-    var fps = 30;
+    addEventListener('mousemove',function (evt) {
+        mousePos = __getMousePos(evt);
+        playerPosition = mousePos.y - (playersHeight/2);
+    });
+    var fps = 60;
     setInterval(function () {
+        __moveOponent();
         __moveBall();
         __draw();
     },1000/fps);
     __draw();
+}
+
+function __getMousePos(evt){
+    var rect = canvas.getBoundingClientRect();
+    var root = document.documentElement;
+    var mouseX = evt.clientX - rect.left - root.scrollLeft;
+    var mouseY = evt.clientY - rect.top - root.scrollTop;
+
+    return {
+        x: mouseX,
+        y: mouseY
+    };
 }
 
 function __moveBall() {
@@ -47,10 +63,16 @@ function __moveBall() {
     }
 }
 
+function __moveOponent(){
+    if (ballY >= oponentPosition + 15 && ballGoingDown) {
+        oponentPosition += 3;
+    } else if (ballY <= oponentPosition + playersHeight -15 && !ballGoingDown) {
+        oponentPosition -= 3;
+    }
+}
+
 function __draw(){
     console.log("draw");
-
-    context.beginPath();
 
     // Dibuja el fondo.
     context.fillStyle = 'white';
@@ -68,5 +90,5 @@ function __draw(){
     context.fillStyle = 'black';
     context.fillRect(5,playerPosition,playersWidth,playersHeight);
 
-    context.closePath();
 }
+
